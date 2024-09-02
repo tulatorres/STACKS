@@ -16,6 +16,7 @@ This project is for Chapter 3 of MLT dissertation research (functional connectiv
 	1. LIPI: 36
 	2. LISY: 83
 	3. PSMA: 192
+- One sample, AR0084 (LISY), did not have enough data associated with it down the pipeline and was causing problems. Removed from samples.
 - The genetic data was collected via buccal swabs from metamorphosed frogs and tissue samples from tadpole tails (~33% of tail can be safely harvested from the animal, per IACUC approval and cited best practices)
 - The genetic data was extracted using the Qiagen Blood and Tissue Kit
 - Tissue samples were processed at the UWyo [Genome Technologies Laboratory](https://microcollaborative.atlassian.net/wiki/spaces/MICLAB/overview) (GTL) in Laramie, WY, and were processed by Gregg Randolf
@@ -38,28 +39,48 @@ conda activate stacks2
 - I am using [cyberduck](https://cyberduck.io/) to help with uploading and finding files, organizing data, and writing slurm scripts (**highly recommend**)
 
 #### 0c. Data Prep and Organization #####
-I organized my files as the following: (f) = folder | (txt) = text file | (slurm) = slurm script | (o) = other |[n] = note
-> (f) rawdata: folder where the gzfastq files received from the GTL lab are housed
+CODE: (f) = folder | (txt) = text file | (slurm) = slurm script | (o) = other | [n] = MLT note
 
-> (f) stacks_scripts: a folder where all your scripts are located, including:
->>> (f) popmap: a folder with text files of species/sample and species/reduced samples. Includes: 
->>>>> (txt) species text file: text file with sample name and species (if using multiple species). Set up as SampleName | Species. Do not include headers.
->>>>> [n] I found it easiest to create this file in excel, then save it into Beartooth using Cyberduck
->>>>> (txt) XXXX_reduced: species text file that will be manipulated in the last step (duplicate species text file to start).
->>> (txt) barcode text file: a text file that has each sample's barcode, provided by the GTL. Set up is: Barcode | Sample Name. Do not include headers
->>> (slurm) All stacks scripts for steps 1 - 7
+I organized my files like below on beartooth using cyberduck: 
+- (f) rawdata: folder where the gzfastq files received from the GTL are housed
+- (f) stacks_scripts: a folder where all your scripts are located, including:
+	- (f) popmap: a folder with text files of species/sample and species/reduced samples. Includes: 
+		- (txt) species text file: text file with sample name and species (if using multiple species). Columns should be: SampleName, Species. Do not include headers in this file
+			- [n] I found it easiest to create this file in excel, then save it into Beartooth using Cyberduck
+		- (txt) XXXX_reduced: species text file that will be used in Step 7. Duplicate your species text file to create, then rename.
+	- (txt) barcode text file: a text file that has each sample's barcode, provided by the GTL. Columns should be: Barcode, Sample Name. Do not include headers in this file
+		- [n] Again, create this file using excel, then save it into Beartooth using Cyberduck
+	- (slurm) All stacks scripts for steps 1 - 7
+- (f) err_out: a folder where error output goes when running slurm script
+- (f) stacks_out: a folder where all Stacks output goes. 
+	- (f) allstacks_out: All stacks output from steps 1-6 goes in this folder
+ 		- [n] **IMPORTANT NOTE**: I initially had several folders for each Stacks step and per species to try and keep organized
+ 		- **DO NOT DO THIS**. Keep all stacks output in one folder
+  		- Downstream Stacks processes will not work unless all Stacks output is in one folder
+		- MLT code will have outputs going to separate files per pipeline process and per species initially.
+  		- I created the (f) allstacks_out within the (f) stacks_out, then copied all of my files to allstacks_out to fix this issue
+	- (f) populations_out: the last step for Stacks can be separated into species-specific folders. Includes:
+		- (f) populations_xxxx: Output for initial run of the populations stacks function for species code XXXX (LIPI, LISY, or PSMA) (see 0d for details)
+		- (f) populations_xxxxR: Reduced species list for population map
 
-> (f) err_out: a folder where error output goes when running slurm script
+If the above was confusing, below is a condensed example (with reduced descriptions) of how I organized my folders on the HPC. Can use or modify:
+```
+Folder 1: RawData
 
-> (f) stacks_out: a folder where all Stacks output goes. 
->>> [n] **IMPORTANT NOTE**: I initially had several folders for each Stacks step and per species. **DO NOT DO THIS**. Keep all stacks output in one folder. This does not make sense, organization-wise, but downstream Stacks processes will not work unless all Stacks output is in one folder
->>> [n] MLT code will have outputs going to separate files per pipeline process and per species initially. To fix this problem, I created an (f) allstacks_out within the (f) stacks_out
+Folder 2: StacksScript
+- Folder 2a: popmap
+	- TextFile 2aa: species text file (with 2+ species; still include if using one species, maybe use lab and sample name)
+	- TextFile 2ab: species reduced text file (with 2+ species; still include if using one species, maybe use lab and sample name)
+- TextFile: barcodes file
+- All Slurm Scripts
 
->>> (f) populations_out: the last step for Stacks can be separated into species-specific folders. Includes:
->>>>> (f) populations_xxxx: Output for initial run of the populations stacks function for species code XXXX (LIPI, LISY, or PSMA) (see 0c for details)
->>>>> (f) populations_xxxxR: Reduced species list for population map
+Folder 3: err_out
 
-**NOTE FOR MLT** AR0084 (LISY) did not have enough data associated with it down the pipeline and was causing problems. Removed from samples.
+Folder 4: stacks_out
+- Folder 4a: allstacks_out
+- Folder 4b: populations_out
+- Folder 4c: populations_outR
+```
 
 #### 0d. General Pipeline #####
 For Stacks, the general pipeline programs used for denovo sequencing are as follows:
@@ -72,35 +93,35 @@ For Stacks, the general pipeline programs used for denovo sequencing are as foll
 7. **populations:** compute population-level summary statistics, can output site-level SNP calls in VCF format, and also output SNPs for analyses in STRUCTURE or in Phylip format 
 
 Other useful programs:
-a. stacks-dist-extract: exports particular section of Stacks log or distribs file for easy viewing or for plotting. Used to identify samples that need to be removed due to having too few loci identified and to help data clean-up 
+- stacks-dist-extract: exports particular section of Stacks log or distribs file for easy viewing or for plotting. Used to identify samples that need to be removed due to having too few loci identified and to help data clean-up 
 
 #### 0e. Helpful Bash Code #####
-cd = move to a different directory
-> e.g., `cd /project/rarity_landscapegenetics/stacks_out`
-> cd .. = move up one directory
-> cd ../.. = move up two directories
+- cd = move to a different directory
+	- e.g., `cd /project/rarity_landscapegenetics/stacks_out`
+	- cd .. = move up one directory
+	- cd ../.. = move up two directories
 
-sbatch = running a slurm file
-> e.g., `sbatch 1_frogs_demux_stacks.slurm`
-> need to be in the folder where the slurm file is in for it to run successfully
-> use cd to navigate to scripts folder/directory
+- sbatch = running a slurm file
+	- e.g., `sbatch 1_frogs_demux_stacks.slurm`
+	- need to be in the folder where the slurm file is in for it to run successfully
+	- use cd to navigate to scripts folder/directory
 
-less = looks at a file in bash. Larger files are easier to look at in bash vs cyberduck
+- less = looks at a file in bash. Larger files are easier to look at in bash vs cyberduck
 
-q = quits out of a less file
+- q = quits out of a less file
 
-cp = copy
-> to move files around, can copy and paste them into a file
-> e.g., cp /project/rarity_landscapegenetics/stacks_out/ustacks_out/lipi/AR0003.alleles.tsv.gz /project/rarity_landscapegenetics/stacks_out
-> easy and quick to move large files around, vs in cyberduck
-> If accidentally saved file in a weird spot, can move it easily using copy function
+- cp = copy
+	- to move files around, can copy and paste them into a file
+	- e.g., cp /project/rarity_landscapegenetics/stacks_out/ustacks_out/lipi/AR0003.alleles.tsv.gz /project/rarity_landscapegenetics/stacks_out
+	- easy and quick to move large files around, vs in cyberduck
+	- If accidentally saved file in a weird spot, can move it easily using copy function
 
 
 ### 1. Demultiplexing the data using **process_radtags** ####
 - see **1_frogs_demux_stacks.slurm for this code** in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder 
 to separate the data by barcodes, need to demultiplex the data via process_radtags
 - For my data, I have a single-end barcode
-- For this process, I will demux the data by indicating what the barcode/index is
+- For this process, I demuxed my data by indicating what the barcode/index is
 - Create a slurm script using the normal sbatch directives + commands. Header includes:
 
 ```{r}
@@ -117,6 +138,7 @@ to separate the data by barcodes, need to demultiplex the data via process_radta
 #SBATCH -o /project/YYYY/err_out/QQQQ%A_%a.output
 ```
 ...where:
+```
 - QQQQ = job name for slurm file (e.g., process_radtags)
 - WWWW = account this process is running in (name of account on Beartooth)
 - nodes = how many beartooth nodes will be used for this project (1 is usually fine)
@@ -126,6 +148,7 @@ to separate the data by barcodes, need to demultiplex the data via process_radta
 - mail-user: include your preferred email so beartooth can send you email updates on the processes running
 - e : error output file location + file extension
 - o : same as above, just including more information
+```
 
 General notes for Step 1:
 - This is demultiplexing the gzfastq files received from the GTL lab.
@@ -136,9 +159,9 @@ General notes for Step 1:
 - know what enzyme(s) were used for this step
   
 **IMPORTANT NOTE**
-- GTL added a couple extra nucleotides to our barcodes (in my data, an extra C was added). For MLT data, we modified the barcodes text file to add the extra nucleotide(s) [modified_barcodes file]
+- GTL added a couple extra nucleotides to my species' barcodes (in my data, an extra C was added). For MLT data, SH modified the barcodes text file to add the extra nucleotide(s) [[modified_barcodes file](https://github.com/tulatorres/STACKS/blob/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts/modified_frogs_barcodes_stacks.txt)]
 - to search for whether extra nucleotides were added to your barcodes, use the following example:
-- `zgrep CTCTAGCT frogs.fastq.gz`, where XXXX is one of your barcodes. 
+- `zgrep AATTGGCC frogs.fastq.gz`, where AATTGGCC is one of your barcodes. 
 - use Control + z to quit bash process :) 
 
 ### 2. Creating unique stacks using **ustacks** ####
@@ -146,25 +169,25 @@ General notes for Step 1:
 - This step takes a set of short-read sequences as input and aligns them into exactly-matching stacks (aka, putative alleles)
 - It then forms a set of putative loci and detect SNPs at each locus using max likelihood framework
 - General Notes for Step 2:
->> SH added a loop to find all the fiels with pattern AR in the fastq.gz file
->> Add an array to the SBATCH setting (#SBATCH --array=1-N), where N = total number of samples
->>>> All samples will be processed in pipeline at the same time
->>>> Faster and more efficient this way
->> Bash indexing starts with 0, so to ensure the samples align, we add a -1 to each ID (line 41 in code)
->> to check if we're calling the correct sample names, we can enter an salloc session in Bash/Beartooth:
+	- SH added a loop to find all the fiels with pattern AR in the fastq.gz file
+	- Add an array to the SBATCH setting (#SBATCH --array=1-N), where N = total number of samples
+		- All samples will be processed in pipeline at the same time
+		- Faster and more efficient this way
+	- Bash indexing starts with 0, so to ensure the samples align, we add a -1 to each ID (line 41 in code)
+	- to check if we're calling the correct sample names, we can enter an salloc session in Bash/Beartooth:
 
->>>> example of running an salloc session and getting onto a node:
+Example of running an salloc session and getting onto a node:
 ```{r}
 salloc --account=rarity_landscapegenetics --time=2:00:00 --mem=20G
 ```
 
->>>> If you forget how to enter an salloc session, you can always search in Bash using history
+If you forget how to enter an salloc session, you can always search in Bash using history
 
 ```{r}
 history | grep salloc
 ```
 
->>>> The above code in bash will call all the times you've run an salloc session and what you entered for memory, time, etc.
+The above code in bash will call all the times you've run an salloc session and what you entered for memory, time, etc.
 
 ### 3. Creating the catalog for each species using **cstacks** ####
 See **3_cstacks_XXXX.slurm**, where XXXX = each species, in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for slurm code
@@ -173,9 +196,9 @@ See **3_cstacks_XXXX.slurm**, where XXXX = each species, in [scripts](https://gi
 - If using multiple species, create a slurm file for each species
 - Be sure you're referencing the correct popmap text file if you are processing different species
 - Again, quick reminder to **keep all stacks output** (i.e., the OUT_DIR) **to the same folder**
---- you should have two file paths: DIR = stacks_out directory, and POPMAP = popmap directory
---- You won't need to move into the input directory, but move into the directory in general (i.e., Line 30 = cd $DIR)
-*I did not do the above in the original set of code*; I had to copy and paste all my files into the same folder near the end of processing
+	- You should have two file paths: DIR = stacks_out directory, and POPMAP = popmap directory
+	- You won't need to move into the input directory, but move into the directory in general (i.e., Line 30 = cd $DIR)
+	- *I did not do the above in the original set of code*; I had to copy and paste all my files into the same folder near the end of processing
 - In the code, SH created a samples object that calls each species' samples using the popmap file
 - do not use #SBATCH --array for this step (remove from code)
 
@@ -187,10 +210,12 @@ See **4_sstacks_XXXX.slurm**, in where XXXX = species, in [scripts](https://gith
 - Like step 3, create a slurm file for each species
 - sstacks code should look like this:
 
+```
 sstacks -P $DIR \
 - s $DIR/$sample \
 -p 32 \
 -o $DIR 
+```
 
 ### 5. Transpose and orient loci with tsv2bam ####
 See **5_tsv2bam_XXXX.slurm**, where XXXX = each species, in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for slurm code
