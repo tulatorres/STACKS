@@ -34,7 +34,7 @@ conda activate stacks2
 - Only need to run the `conda create` once 
 - Always activate stacks2! 
 
-- Also before processing, upload your fastq.gz file (or whichever zip file has your genetic data) onto beartooth
+- Also before processing, upload your fastq.gz file (or whichever zip file has your genetic data) onto HPC of choice (see note below)
 - I am using [cyberduck](https://cyberduck.io/) to help with uploading and finding files, organizing data, and writing slurm scripts (**highly recommend**)
 
 #### 0c. Data Prep and Organization #####
