@@ -1,0 +1,63 @@
+Nov 14 08:00:41 Generating run log at /usr/local/illumina/runs/231113_VL00228_54_AAC2VWYHV/AnalysisTemp/231113_VL00228_54_AAC2VWYHV/fastq/dragen_run_1699974041121_81902.log
+Nov 14 08:00:41 Command Line: /opt/edico/bin/dragen --watchdog-max-vmem-threshold 182GB --logging-to-output-dir true --events-log-file /usr/local/illumina/runs/231113_VL00228_54_AAC2VWYHV/AnalysisTemp/231113_VL00228_54_AAC2VWYHV/bcl2_dragen_events.csv --fastq-compression-format-override gzip --bcl-conversion-only true --no-lane-splitting true --bcl-input-directory /usr/local/illumina/runs/231113_VL00228_54_AAC2VWYHV --sample-sheet /usr/local/illumina/runs/231113_VL00228_54_AAC2VWYHV/SampleSheet.csv --output-directory /usr/local/illumina/runs/231113_VL00228_54_AAC2VWYHV/AnalysisTemp/231113_VL00228_54_AAC2VWYHV/fastq --force 
+CWD: /
+PID: 81902
+PPID: 2517
+Host: vl00228
+Nov 14 08:00:41 maximum number of open file descriptors (ulimit -n): soft=1048576  hard=1048576
+Nov 14 08:00:41 maximum stack size (ulimit -s): soft=18446744073709551615  hard=18446744073709551615
+Nov 14 08:00:41 maximum number of processes (ulimit -u): soft=18446744073709551615  hard=18446744073709551615
+Nov 14 08:00:41 DmaPool::InitHugePages. numbufs=400, allocsize=838860800, hpsize=2097152, numhugepages=400
+Nov 14 08:00:41 Total System Memory: 302669987840
+Nov 14 08:00:41 Total System Threads: 40
+Nov 14 08:00:41 DRAGEN Host Software Version 07.021.624.3.10.11 and Bio-IT Processor Version 0x18101306
+Nov 14 08:00:41 Compiler version: 9.2.0
+Nov 14 08:00:41 Board ref ID: AU200A32G
+Nov 14 08:00:41 Board HW ID: 2210010B600L
+Nov 14 08:00:41 AutoDetected reference: UNKNOWN
+Nov 14 08:00:41 2023-11-14T15:00:41Z thread 81902 # CPU hw threads available: 40
+
+Nov 14 08:00:41 2023-11-14T15:00:41Z thread 81902 Parallel Tiles: 4. Threads Per Tile: 10
+
+Nov 14 08:00:41 2023-11-14T15:00:41Z thread 81902 HW compressors: 10
+
+Nov 14 08:00:41 2023-11-14T15:00:41Z thread 81902 HW decompressors: 0
+
+Nov 14 08:00:41 2023-11-14T15:00:41Z thread 81902 SW compressors: 0
+
+Nov 14 08:00:41 2023-11-14T15:00:41Z thread 81902 SW decompressors: 20
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 0 finished. Processed 33645 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 1 finished. Processed 33667 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 2 finished. Processed 33548 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 3 finished. Processed 33594 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 4 finished. Processed 33600 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 5 finished. Processed 33651 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 6 finished. Processed 33568 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 7 finished. Processed 33536 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 8 finished. Processed 33567 buffers
+
+Nov 14 08:04:47 2023-11-14T15:04:47Z thread 81902 Hardware compressor 9 finished. Processed 33682 buffers
+
+Nov 14 08:04:48 All pipelines finished
+Nov 14 08:04:48 License manager end session: board 0
+Nov 14 08:04:48 Print dragen metrics
+    metricsFilePath: /usr/local/illumina/runs/231113_VL00228_54_AAC2VWYHV/AnalysisTemp/231113_VL00228_54_AAC2VWYHV/fastq/dragen.mapping_metrics.csv
+    tumorNormalMode: 0
+    NumReadsProcessedOrLoaded: 0
+
+Nov 14 08:04:48 MapAlignAndVcStats 0 printed
+Nov 14 08:04:48 CoverageMetrics 0 printed
+Nov 14 08:04:48 run timing printed
+Nov 14 08:04:48 Processed 0 bases
+Nov 14 08:04:48 Stopped Signal Handler
+Nov 14 08:04:48 Watchdog Exited
+Nov 14 08:04:48 DRAGEN finished normally
