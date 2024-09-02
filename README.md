@@ -1,4 +1,5 @@
 ## Running Stacks on Amphibian Tissue Data from Wetlands in SE Wyoming
+If you are using this for reference code: skip to 0b.
 
 ### 0. About the Read Me + Data Conditions ####
 #### 0a. General Information
@@ -15,27 +16,28 @@ This project is for Chapter 3 of MLT dissertation research (functional connectiv
 	1. LIPI: 36
 	2. LISY: 83
 	3. PSMA: 192
-- Tissue samples were processed at the UWyo [Genome Technologies Laboratory](https://microcollaborative.atlassian.net/wiki/spaces/MICLAB/overview)
-- Using [Stacks 2.65](https://catchenlab.life.illinois.edu/stacks/)
 - The genetic data was collected via buccal swabs from metamorphosed frogs and tissue samples from tadpole tails (~33% of tail can be safely harvested from the animal, per IACUC approval and cited best practices)
 - The genetic data was extracted using the Qiagen Blood and Tissue Kit
-- The genetic data was sent to the Genome Technologies Laboratory (GTL) in Laramie, WY, and were processed by Gregg Randolf
+- Tissue samples were processed at the UWyo [Genome Technologies Laboratory](https://microcollaborative.atlassian.net/wiki/spaces/MICLAB/overview) (GTL) in Laramie, WY, and were processed by Gregg Randolf
 - Genetic data was assayed using ddRAD (restriction enzymes EcoR1 and Mse1 were used)
-- The resulting files were then processed via Stacks by MLT and Sean Harrington (SH)
+- Resulting data was processed using [Stacks 2.65](https://catchenlab.life.illinois.edu/stacks/) by MLT and Dr. Sean Harrington (SH) of INBRE
 
-- To ensure you are using the current version of Stacks, run the following:
+#### 0b. **Before you begin** #####
+1. Have a [Beartooth or MedicineBow account](https://arccwiki.atlassian.net/wiki/spaces/DOCUMENTAT/pages/1683587073/Beartooth) or access to a HPC (NOTE: Beartooth will be obsolete in late 2024 - MedicineBow is the new HPC that you'll need an account to)
+2. Once on the HPC, STACKS needs to be on the latest version. Run the following code:
 ```{r}
 module load miniconda3/23.11.0
 conda create -n stacks2 -c bioconda -c conda-forge stacks=2.65
 conda activate stacks2
 ```
-- Change `stacks=` to the latest version of stacks
-- Always activate stacks2. Only need to run the `conda create` once
+- Change `stacks=` to the latest version of stacks. In this case (2024), STACKS v 2.65 is the latest version
+- Only need to run the `conda create` once 
+- Always activate stacks2! 
 
-- Also before processing, upload the fastq.gz file onto beartooth
-- I am using [cyberduck](https://cyberduck.io/) to help with uploading and finding files, organizing data, and writing slurm scripts
+- Also before processing, upload your fastq.gz file (or whichever zip file has your genetic data) onto beartooth
+- I am using [cyberduck](https://cyberduck.io/) to help with uploading and finding files, organizing data, and writing slurm scripts (**highly recommend**)
 
-#### 0b. Data Prep and Organization #####
+#### 0c. Data Prep and Organization #####
 I organized my files as the following: (f) = folder | (txt) = text file | (slurm) = slurm script | (o) = other |[n] = note
 > (f) rawdata: folder where the gzfastq files received from the GTL lab are housed
 
@@ -57,9 +59,9 @@ I organized my files as the following: (f) = folder | (txt) = text file | (slurm
 >>>>> (f) populations_xxxx: Output for initial run of the populations stacks function for species code XXXX (LIPI, LISY, or PSMA) (see 0c for details)
 >>>>> (f) populations_xxxxR: Reduced species list for population map
 
-**NOTE** AR0084 did not have enough data associated with it down the pipeline and was causing problems. Removed from samples
+**NOTE FOR MLT** AR0084 (LISY) did not have enough data associated with it down the pipeline and was causing problems. Removed from samples.
 
-#### 0c. General Pipeline #####
+#### 0d. General Pipeline #####
 For Stacks, the general pipeline programs used for denovo sequencing are as follows:
 1. **process_radtags:** proceses the raw reads from the GTL lab
 2. **ustacks:** takes input set of short-read sequences, aligns them into unique, matching stacks, compares stacks into set of loci and detect SNPs at each loci using max likelihood framework
@@ -72,7 +74,7 @@ For Stacks, the general pipeline programs used for denovo sequencing are as foll
 Other useful programs:
 a. stacks-dist-extract: exports particular section of Stacks log or distribs file for easy viewing or for plotting. Used to identify samples that need to be removed due to having too few loci identified and to help data clean-up 
 
-#### 0d. Helpful Bash Code #####
+#### 0e. Helpful Bash Code #####
 cd = move to a different directory
 > e.g., `cd /project/rarity_landscapegenetics/stacks_out`
 > cd .. = move up one directory
@@ -95,10 +97,10 @@ cp = copy
 
 
 ### 1. Demultiplexing the data using **process_radtags** ####
-- see **1_frogs_demux_stacks.slurm for this code** in [scripts](https://github.com/tulatorres/PhD/tree/main/Ch3_FunctionalConnectivity/DataCleanup/scripts) folder 
+- see **1_frogs_demux_stacks.slurm for this code** in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder 
 to separate the data by barcodes, need to demultiplex the data via process_radtags
 - For my data, I have a single-end barcode
-- For this process, we will demux the data by indicating what the barcode/index is
+- For this process, I will demux the data by indicating what the barcode/index is
 - Create a slurm script using the normal sbatch directives + commands. Header includes:
 
 ```{r}
@@ -140,7 +142,7 @@ General notes for Step 1:
 - use Control + z to quit bash process :) 
 
 ### 2. Creating unique stacks using **ustacks** ####
-- See **2_frogs_ustacks.slurm** in [scripts](https://github.com/tulatorres/PhD/tree/main/Ch3_FunctionalConnectivity/DataCleanup/scripts) folder for code
+- See **2_frogs_ustacks.slurm** in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for code
 - This step takes a set of short-read sequences as input and aligns them into exactly-matching stacks (aka, putative alleles)
 - It then forms a set of putative loci and detect SNPs at each locus using max likelihood framework
 - General Notes for Step 2:
@@ -165,7 +167,7 @@ history | grep salloc
 >>>> The above code in bash will call all the times you've run an salloc session and what you entered for memory, time, etc.
 
 ### 3. Creating the catalog for each species using **cstacks** ####
-See **3_cstacks_XXXX.slurm**, where XXXX = each species, in [scripts](https://github.com/tulatorres/PhD/tree/main/Ch3_FunctionalConnectivity/DataCleanup/scripts) folder for slurm code
+See **3_cstacks_XXXX.slurm**, where XXXX = each species, in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for slurm code
 
 - This step builds the catalog for each species using ustacks output. 
 - If using multiple species, create a slurm file for each species
@@ -178,7 +180,7 @@ See **3_cstacks_XXXX.slurm**, where XXXX = each species, in [scripts](https://gi
 - do not use #SBATCH --array for this step (remove from code)
 
 ### 4. Creates sets of putative loci (i.e., stacks) with **sstacks** ####
-See **4_sstacks_XXXX.slurm**, in where XXXX = species, in [scripts](https://github.com/tulatorres/PhD/tree/main/Ch3_FunctionalConnectivity/DataCleanup/scripts) folder for slurm code
+See **4_sstacks_XXXX.slurm**, in where XXXX = species, in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for slurm code
 
 - This step creates the putative loci stacks for each species
 - Include the #SBATCH --array=1-Ns, where Ns = total number of samples per species
@@ -191,7 +193,7 @@ sstacks -P $DIR \
 -o $DIR 
 
 ### 5. Transpose and orient loci with tsv2bam ####
-See **5_tsv2bam_XXXX.slurm**, where XXXX = each species, in [scripts](https://github.com/tulatorres/PhD/tree/main/Ch3_FunctionalConnectivity/DataCleanup/scripts) folder for slurm code
+See **5_tsv2bam_XXXX.slurm**, where XXXX = each species, in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for slurm code
 
 - THis step sorts single-end reads so they occur in the same order
 - Output shows the raw reads aligned to the loci constructed by the single-end analysis (ustacks/cstacks/sstacks)
@@ -203,7 +205,7 @@ General notes:
 
 
 ### 6. Incorporate, assemble and merge a contig, and align reads with **gstacks** ####
-See **6_gstacks_XXXX.slurm**, where XXXX = each species, in [scripts](https://github.com/tulatorres/PhD/tree/main/Ch3_FunctionalConnectivity/DataCleanup/scripts) folder for slurm code
+See **6_gstacks_XXXX.slurm**, where XXXX = each species, in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for slurm code
 
 - For denovo analyses, gstacks looks at all the output of stacks
 - THen, it incorporates paired-end reads (if available), then assembles paired-end reads into a contig
@@ -216,7 +218,7 @@ Do not need an array for this step
 
 
 ### 7. Final step: **populations** ####
-See **7_populations_XXXX.slurm**, where XXX = each species, in [scripts](https://github.com/tulatorres/PhD/tree/main/Ch3_FunctionalConnectivity/DataCleanup/scripts) folder for slurm code
+See **7_populations_XXXX.slurm**, where XXX = each species, in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for slurm code
 
 - You made it!! Final step before we get to use our genetic data!
 - As seen above, you can create a folder that houses this data for each of your species.
