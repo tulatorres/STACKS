@@ -161,7 +161,7 @@ General notes for Step 1:
 **IMPORTANT NOTE**
 - GTL added a couple extra nucleotides to my species' barcodes (in my data, an extra C was added). For MLT data, SH modified the barcodes text file to add the extra nucleotide(s) [[modified_barcodes file](https://github.com/tulatorres/STACKS/blob/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts/modified_frogs_barcodes_stacks.txt)]
 - to search for whether extra nucleotides were added to your barcodes, use the following example:
-- `zgrep AATTGGCC frogs.fastq.gz`, where AATTGGCC is one of your barcodes. 
+- `zgrep AATTGGCC frogs.fastq.gz`, where AATTGGCC is one of your barcodes (and `frogs.fastq.gz` is your gzfastq file)
 - use Control + z to quit bash process :) 
 
 ### 2. Creating unique stacks using **ustacks** ####
@@ -169,7 +169,12 @@ General notes for Step 1:
 - This step takes a set of short-read sequences as input and aligns them into exactly-matching stacks (aka, putative alleles)
 - It then forms a set of putative loci and detect SNPs at each locus using max likelihood framework
 - General Notes for Step 2:
-	- SH added a loop to find all the fiels with pattern AR in the fastq.gz file
+	- In slurm header: include an array at end
+ 		- Arrays will process each sample more efficiently (MLT: to my understanding)
+  		- Array code looks like the following:
+			 ` #SBATCH --array=1-XXX `
+		- ...where XXX = how many total samples you are processing
+	- SH added a loop to find all the fields with pattern AR in the fastq.gz file
 	- Add an array to the SBATCH setting (#SBATCH --array=1-N), where N = total number of samples
 		- All samples will be processed in pipeline at the same time
 		- Faster and more efficient this way
