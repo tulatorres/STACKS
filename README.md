@@ -1,3 +1,12 @@
+---
+title: "Stacks"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+
 ## Running Stacks on Amphibian Tissue Data from Wetlands in SE Wyoming
 If you are using this for reference code: skip to 0b.
 
