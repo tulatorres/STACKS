@@ -1,12 +1,12 @@
 ## Running Stacks on Amphibian Tissue Data from Wetlands in SE Wyoming
-- [0. About the Read Me](0.-About-the-Read-Me-and-Data-Conditions)
-- [1. Demultiplexing the data](1.-Demultiplexing-the-data-using-process_radtags)
-- [2. Creating unique stacks](2.-Creating-unique-stacks-using-ustacks)
-- [3. Creating species catalog](3.-Creating-the-catalog-for-each-species-using-cstacks)
-- [4. Creating sets of stacks](4.-Creates-sets-of-putative-loci-(i.e.,-stacks)-with-sstacks)
-- [5. Transpose and orient loci](5.-Transpose-and-orient-loci-with-tsv2bam)
-- [6. Incorporate, assemble, merge, and align reads](6.-Incorporate,-assemble-and-merge-a-contig,-and-align-reads-with-gstacks)
-- [7. Population summary statistics](7.-Final-step-populations)
+- [0. About the Read Me](#0.-About-the-Read-Me-and-Data-Conditions)
+- [1. Demultiplexing the data](#1.-Demultiplexing-the-data-using-process_radtags)
+- [2. Creating unique stacks](#2.-Creating-unique-stacks-using-ustacks)
+- [3. Creating species catalog](#3.-Creating-the-catalog-for-each-species-using-cstacks)
+- [4. Creating sets of stacks](#4.-Creates-sets-of-putative-loci-(i.e.,-stacks)-with-sstacks)
+- [5. Transpose and orient loci](#5.-Transpose-and-orient-loci-with-tsv2bam)
+- [6. Incorporate, assemble, merge, and align reads](#6.-Incorporate,-assemble-and-merge-a-contig,-and-align-reads-with-gstacks)
+- [7. Population summary statistics](#7.-Final-step:-populations)
 
 If you are using this for reference code: skip to [0b.](0b.-Before-you-begin)
 
