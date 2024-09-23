@@ -116,7 +116,6 @@ Other useful programs:
 	- easy and quick to move large files around, vs in cyberduck
 	- If accidentally saved file in a weird spot, can move it easily using copy function
 
-
 ### 1. Demultiplexing the data using **process_radtags** ####
 - see **1_frogs_demux_stacks.slurm for this code** in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder 
 to separate the data by barcodes, need to demultiplex the data via process_radtags
@@ -160,9 +159,11 @@ General notes for Step 1:
   
 **IMPORTANT NOTE**
 - GTL added a couple extra nucleotides to my species' barcodes (in my data, an extra C was added). For MLT data, SH modified the barcodes text file to add the extra nucleotide(s) [[modified_barcodes file](https://github.com/tulatorres/STACKS/blob/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts/modified_frogs_barcodes_stacks.txt)]
+- If you're having problems finding your barcodes, and you think they're modified to some extent, [use and modify this slurm script](https://github.com/tulatorres/STACKS/blob/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts/barcode_check.slurm) for your data
 - to search for whether extra nucleotides were added to your barcodes, use the following example:
 - `zgrep AATTGGCC frogs.fastq.gz`, where AATTGGCC is one of your barcodes (and `frogs.fastq.gz` is your gzfastq file)
-- use Control + z to quit bash process :) 
+- use Control + z to quit bash process :)
+- 
 
 ### 2. Creating unique stacks using **ustacks** ####
 - See **2_frogs_ustacks.slurm** in [scripts](https://github.com/tulatorres/STACKS/tree/5a5ff6a77b05e6e3fe0e1903cc5ea962e7351ef3/scripts) folder for code
