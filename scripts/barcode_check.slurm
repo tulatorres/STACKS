@@ -14,7 +14,7 @@
 # defining the file
 file="../rawdata/Torres1_S1_R1_001.fastq.gz"
 
-# searching for cut sites 
+# searching for cut sites.
 zgrep CAATTC $file > ../barcodes_testing/seqs_cutsite.txt
 
 # defines the variable within the cut sites
